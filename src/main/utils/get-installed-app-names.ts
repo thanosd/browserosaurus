@@ -5,8 +5,13 @@ import { sleep } from 'tings'
 
 import type { AppName } from '../../config/apps.js'
 import { apps } from '../../config/apps.js'
-import { retrievedInstalledApps, startedScanning } from '../state/actions.js'
+import {
+  retrievedChromeProfiles,
+  retrievedInstalledApps,
+  startedScanning,
+} from '../state/actions.js'
 import { dispatch } from '../state/store.js'
+import { getChromeProfiles } from './get-chrome-profiles.js'
 
 function getAllInstalledAppNames(): string[] {
   const appNames = execSync(
@@ -38,7 +43,15 @@ async function getInstalledAppNames(): Promise<void> {
     getInstalledAppNames()
   } else {
     dispatch(retrievedInstalledApps(installedApps))
+
+    // Detect Chrome/Brave profiles for installed Chromium-based browsers
+    const profiles = getChromeProfiles(installedApps)
+
+    if (profiles.length > 0) {
+      dispatch(retrievedChromeProfiles(profiles))
+    }
   }
 }
 
 export { getInstalledAppNames }
+

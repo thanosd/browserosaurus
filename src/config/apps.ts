@@ -1,5 +1,6 @@
 type App = {
   privateArg?: string
+  profileArg?: string
   convertUrl?: (url: string) => string
 }
 
@@ -11,15 +12,19 @@ const apps = typeApps({
   Blisk: {},
   'Brave Browser': {
     privateArg: '--incognito',
+    profileArg: '--profile-directory',
   },
   'Brave Browser Beta': {
     privateArg: '--incognito',
+    profileArg: '--profile-directory',
   },
   'Brave Browser Nightly': {
     privateArg: '--incognito',
+    profileArg: '--profile-directory',
   },
   'Brave Dev': {
     privateArg: '--incognito',
+    profileArg: '--profile-directory',
   },
   Chromium: {
     privateArg: '--incognito',
@@ -70,15 +75,19 @@ const apps = typeApps({
   FreeTube: {},
   'Google Chrome': {
     privateArg: '--incognito',
+    profileArg: '--profile-directory',
   },
   'Google Chrome Beta': {
     privateArg: '--incognito',
+    profileArg: '--profile-directory',
   },
   'Google Chrome Canary': {
     privateArg: '--incognito',
+    profileArg: '--profile-directory',
   },
   'Google Chrome Dev': {
     privateArg: '--incognito',
+    profileArg: '--profile-directory',
   },
   IceCat: {
     privateArg: '--private-window',

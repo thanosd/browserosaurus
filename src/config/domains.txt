@@ -1,0 +1,21 @@
+# Browserosaurus Domain Filter
+#
+# List domains below (one per line) where Browserosaurus should show
+# the browser picker dialog. For all other domains, the URL will
+# automatically open in the first browser on your list.
+#
+# Wildcards are supported:
+#   *.example.com   — matches any subdomain of example.com
+#   example.com     — matches exactly example.com
+#
+# If this file is empty (no uncommented lines), the picker will
+# always be shown (default Browserosaurus behavior).
+#
+# Examples:
+# github.com
+# *.google.com
+# stackoverflow.com
+docs.google.com
+*.sentry.io
+*.amazonaws.com
+*.aws.amazon.com

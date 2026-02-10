@@ -17,13 +17,18 @@ const clickedUpdateButton = prefs('update-button/clicked')
 const clickedUpdateRestartButton = prefs('update-restart-button/clicked')
 const confirmedReset = prefs('reset/confirmed')
 
-const updatedHotCode = prefs<{ appName: AppName; value: string }>(
-  'hot-code/updated',
-)
+const updatedHotCode = prefs<{
+  appName: AppName
+  value: string
+  profileDirectory?: string
+}>('hot-code/updated')
 
-const reorderedApp = prefs<{ sourceName: AppName; destinationName: AppName }>(
-  'app/reordered',
-)
+const reorderedApp = prefs<{
+  sourceName: AppName
+  destinationName: AppName
+  sourceProfileDirectory?: string
+  destinationProfileDirectory?: string
+}>('app/reordered')
 
 const clickedHomepageButton = prefs('homepage-button/clicked')
 const clickedOpenIssueButton = prefs('open-issue-button/clicked')

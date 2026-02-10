@@ -8,17 +8,25 @@ export function openApp(
   url: string,
   isAlt: boolean,
   isShift: boolean,
+  profileDirectory?: string,
 ): void {
   const selectedApp = apps[appName]
 
   const convertedUrl =
     'convertUrl' in selectedApp ? selectedApp.convertUrl(url) : url
 
+  const profileArgs: string[] =
+    profileDirectory && 'profileArg' in selectedApp && selectedApp.profileArg
+      ? ['--new', '--args', `${selectedApp.profileArg}=${profileDirectory}`]
+      : []
+
   const openArguments: string[] = [
     '-a',
     appName,
     isAlt ? '--background' : [],
-    isShift && 'privateArg' in selectedApp
+    // Profile args come first so they're passed to the app
+    ...profileArgs,
+    isShift && 'privateArg' in selectedApp && !profileDirectory
       ? ['--new', '--args', selectedApp.privateArg]
       : [],
     // In order for private/incognito mode to work the URL needs to be passed
@@ -30,3 +38,4 @@ export function openApp(
 
   execFile('open', openArguments)
 }
+

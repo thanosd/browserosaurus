@@ -64,8 +64,15 @@ const App: React.FC = () => {
         className="relative w-full grow overflow-y-auto px-2 pb-2"
       >
         {apps.map((app, index) => {
+          const displayName = app.profileDisplayName
+            ? `${app.name} — ${app.profileDisplayName}`
+            : app.name
+          const uniqueKey = app.profileDirectory
+            ? `${app.name}::${app.profileDirectory}`
+            : app.name
+
           return (
-            <div key={app.name}>
+            <div key={uniqueKey}>
               <button
                 ref={(element) => {
                   if (!appsRef.current) {
@@ -89,6 +96,7 @@ const App: React.FC = () => {
                       appName: app.name,
                       isAlt: event.altKey,
                       isShift: event.shiftKey,
+                      profileDirectory: app.profileDirectory,
                     }),
                   )
                 }
@@ -105,7 +113,7 @@ const App: React.FC = () => {
                 }}
                 type="button"
               >
-                <span>{app.name}</span>
+                <span>{displayName}</span>
                 <span className="flex items-center space-x-4">
                   {app.hotCode ? (
                     <Kbd className="shrink-0">{keyCodeMap[app.hotCode]}</Kbd>

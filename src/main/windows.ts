@@ -79,10 +79,10 @@ async function createWindows(): Promise<void> {
     height,
     icon: path.join(__dirname, '/icon/icon.png'),
     maximizable: false,
-    maxWidth: 250,
+    maxWidth: 450,
     minHeight: 112,
     minimizable: false,
-    minWidth: 250,
+    minWidth: 450,
     movable: false,
     resizable: true,
     show: false,
@@ -98,7 +98,7 @@ async function createWindows(): Promise<void> {
       nodeIntegrationInWorker: false,
       preload: path.join(__dirname, 'preload.js'),
     },
-    width: 250,
+    width: 350,
   })
 
   pickerWindow.setWindowButtonVisibility(false)
@@ -163,7 +163,7 @@ function showPickerWindow(): void {
     const bWindowBounds = pickerWindow.getBounds()
 
     const nudge = {
-      x: -125,
+      x: -175,
       y: -30,
     }
 

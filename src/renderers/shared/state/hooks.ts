@@ -16,6 +16,8 @@ const useDeepEqualSelector: TypedUseSelectorHook<RootState> = (selector) =>
 type InstalledApp = {
   name: AppName
   hotCode: string | null
+  profileDirectory?: string
+  profileDisplayName?: string
 }
 
 const useInstalledApps = (): InstalledApp[] => {
@@ -25,6 +27,8 @@ const useInstalledApps = (): InstalledApp[] => {
     .map((storedApp) => ({
       hotCode: storedApp.hotCode,
       name: storedApp.name,
+      profileDirectory: storedApp.profileDirectory,
+      profileDisplayName: storedApp.profileDisplayName,
     }))
 }
 

@@ -19,6 +19,10 @@ const startedScanning = main('installed-apps/scanning')
 
 const retrievedInstalledApps = main<AppName[]>('installed-apps/retrieved')
 
+const retrievedChromeProfiles = main<
+  { appName: AppName; directory: string; displayName: string }[]
+>('chrome-profiles/retrieved')
+
 const receivedRendererStartupSignal = main<{ data: Data; storage: Storage }>(
   'sync-reducers',
 )
@@ -48,6 +52,7 @@ export {
   openedUrl,
   readiedApp,
   receivedRendererStartupSignal,
+  retrievedChromeProfiles,
   retrievedInstalledApps,
   startedScanning,
 }

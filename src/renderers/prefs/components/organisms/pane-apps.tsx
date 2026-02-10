@@ -17,7 +17,6 @@ import { CSS } from '@dnd-kit/utilities'
 import clsx from 'clsx'
 import { useDispatch } from 'react-redux'
 
-import type { AppName } from '../../../../config/apps.js'
 import Input from '../../../shared/components/atoms/input.js'
 import { Spinner } from '../../../shared/components/atoms/spinner.js'
 import type { InstalledApp } from '../../../shared/state/hooks.js'
@@ -30,19 +29,23 @@ import { reorderedApp, updatedHotCode } from '../../state/actions.js'
 import { Pane } from '../molecules/pane.js'
 
 type SortableItemProps = {
-  readonly id: InstalledApp['name']
-  readonly name: InstalledApp['name']
+  readonly id: string
+  readonly appName: InstalledApp['name']
+  readonly displayName: string
   readonly index: number
   readonly icon?: string
   readonly keyCode?: string
+  readonly profileDirectory?: string
 }
 
 const SortableItem = ({
   id,
-  name,
+  appName,
+  displayName,
   keyCode = '',
   index,
   icon = '',
+  profileDirectory,
 }: SortableItemProps) => {
   const {
     attributes,
@@ -84,11 +87,11 @@ const SortableItem = ({
           className={clsx('mr-4 size-8', !icon && 'hidden')}
           src={icon}
         />
-        <span>{name}</span>
+        <span>{displayName}</span>
       </div>
       <div className="flex items-center justify-center p-4">
         <Input
-          aria-label={`${name} hotkey`}
+          aria-label={`${displayName} hotkey`}
           className="h-8 w-12"
           data-app-id={id}
           maxLength={1}
@@ -100,7 +103,8 @@ const SortableItem = ({
           onKeyPress={(event) => {
             dispatch(
               updatedHotCode({
-                appName: id,
+                appName,
+                profileDirectory,
                 value: event.code,
               }),
             )
@@ -119,7 +123,12 @@ export function AppsPane(): JSX.Element {
 
   const installedApps = useInstalledApps().map((installedApp) => ({
     ...installedApp,
-    id: installedApp.name,
+    displayName: installedApp.profileDisplayName
+      ? `${installedApp.name} \u2014 ${installedApp.profileDisplayName}`
+      : installedApp.name,
+    id: installedApp.profileDirectory
+      ? `${installedApp.name}::${installedApp.profileDirectory}`
+      : installedApp.name,
   }))
 
   const sensors = useSensors(
@@ -131,12 +140,19 @@ export function AppsPane(): JSX.Element {
 
   const onDragEnd = ({ active, over }: DragEndEvent) => {
     if (active.id !== over?.id) {
-      dispatch(
-        reorderedApp({
-          destinationName: over?.id as AppName,
-          sourceName: active.id as AppName,
-        }),
-      )
+      const sourceApp = installedApps.find((a) => a.id === active.id)
+      const destApp = installedApps.find((a) => a.id === over?.id)
+
+      if (sourceApp && destApp) {
+        dispatch(
+          reorderedApp({
+            destinationName: destApp.name,
+            destinationProfileDirectory: destApp.profileDirectory,
+            sourceName: sourceApp.name,
+            sourceProfileDirectory: sourceApp.profileDirectory,
+          }),
+        )
+      }
     }
   }
 
@@ -162,16 +178,20 @@ export function AppsPane(): JSX.Element {
             items={installedApps}
             strategy={verticalListSortingStrategy}
           >
-            {installedApps.map(({ id, name, hotCode }, index) => (
-              <SortableItem
-                key={id}
-                icon={icons[id]}
-                id={id}
-                index={index}
-                keyCode={keyCodeMap[hotCode || '']}
-                name={name}
-              />
-            ))}
+            {installedApps.map(
+              ({ id, name, hotCode, displayName, profileDirectory }, index) => (
+                <SortableItem
+                  key={id}
+                  appName={name}
+                  displayName={displayName}
+                  icon={icons[name]}
+                  id={id}
+                  index={index}
+                  keyCode={keyCodeMap[hotCode || '']}
+                  profileDirectory={profileDirectory}
+                />
+              ),
+            )}
           </SortableContext>
         </DndContext>
       </div>

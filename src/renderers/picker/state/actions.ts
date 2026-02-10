@@ -7,6 +7,7 @@ type OpenAppArguments = {
   appName: AppName | undefined
   isAlt: boolean
   isShift: boolean
+  profileDirectory?: string
 }
 
 const startedPicker = picker('started')

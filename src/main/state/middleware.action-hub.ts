@@ -29,6 +29,7 @@ import copyUrlToClipboard from '../utils/copy-url-to-clipboard.js'
 import { getAppIcons } from '../utils/get-app-icons.js'
 import { getInstalledAppNames } from '../utils/get-installed-app-names.js'
 import { initUpdateChecker } from '../utils/init-update-checker.js'
+import { isUrlMatchingDomainList } from '../utils/match-domain.js'
 import { openApp } from '../utils/open-app.js'
 // import { removeWindowsFromMemory } from '../utils/remove-windows-from-memory'
 import {
@@ -134,11 +135,11 @@ export const actionHubMiddleware =
 
     // Clicked app
     else if (clickedApp.match(action)) {
-      const { appName, isAlt, isShift } = action.payload
+      const { appName, isAlt, isShift, profileDirectory } = action.payload
 
       // Ignore if app's bundle id is missing
       if (appName) {
-        openApp(appName, nextState.data.url, isAlt, isShift)
+        openApp(appName, nextState.data.url, isAlt, isShift, profileDirectory)
         pickerWindow?.hide()
       }
     }
@@ -167,6 +168,7 @@ export const actionHubMiddleware =
             nextState.data.url,
             action.payload.altKey,
             action.payload.shiftKey,
+            foundApp.profileDirectory,
           )
           pickerWindow?.hide()
         }
@@ -175,7 +177,20 @@ export const actionHubMiddleware =
 
     // Open URL
     else if (openedUrl.match(action)) {
-      showPickerWindow()
+      const {url} = nextState.data
+
+      if (isUrlMatchingDomainList(url)) {
+        showPickerWindow()
+      } else {
+        const firstApp = nextState.storage.apps.find((a) => a.isInstalled)
+
+        if (firstApp) {
+          openApp(firstApp.name, url, false, false, firstApp.profileDirectory)
+        } else {
+          // No installed apps found, fall back to picker
+          showPickerWindow()
+        }
+      }
     }
 
     // Tray: restore picker
