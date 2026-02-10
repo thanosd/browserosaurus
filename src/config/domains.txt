@@ -19,3 +19,4 @@ docs.google.com
 *.sentry.io
 *.amazonaws.com
 *.aws.amazon.com
+github.com
